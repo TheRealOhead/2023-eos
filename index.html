@@ -1,0 +1,139 @@
+<!-- HEY! Stop snooping around in here and open this file with Chrome! -->
+<!-- Author: Owen Parker -->
+<!doctype html>
+<html>
+    <head>
+        <title>Summer Countdown</title>
+        <style>
+            
+            @font-face {
+                font-family: november;
+                src: url(november.ttf);
+            }
+            @font-face {
+                font-family: appleII;
+                src: url(appleII.ttf);
+            }
+            
+            body {
+                background-color:#010;
+                background-image:url(https://1.bp.blogspot.com/-I3wQ_1TKxrA/V96W-RFtaKI/AAAAAAAANTM/o7YOA6750pQ1hEcjOL0nH2hvuHRTFDcvgCLcB/s1600/Scanlines.png);
+                background-repeat:repeat;
+                background-size:400%;
+                
+                color:#0f0;
+                
+                font-family: november, appleII, monospace;
+                font-size:100px;
+                text-align:center;
+            }
+            
+            #timer-container {
+                line-height:1px;
+            }
+            
+            #timer {
+                position:relative;
+                text-shadow: 0 0 20px #0f0;
+            }
+            
+            
+        </style>
+    </head>
+    <body style="margin-top:22%">
+        
+        <x id="timer-container">
+            <span id="timer"></span>
+        </x>
+        
+        
+        <script>
+            var end = 0;
+            
+            
+            
+            // Dear fellow nerds: pls don't judge my code ;_;
+            function getNow() {
+                return (new Date()).getTime();
+            };
+            
+            function getMilliseconds(mil) {
+                let value = Math.floor((mil % 1000) * 1000) / 1000;
+                let done = value.toString();
+                
+                if (done.length == 2) {
+                    done = '0' + done;
+                };
+                
+                if (done.length == 1) {
+                    done = '00' + done;
+                };
+                
+                // Set last digit to something random to make it look nicer
+                done = done.substr(0,done.length - 1) + Math.floor(Math.random() * 10);
+                
+                return done;
+            };
+            
+            function getSeconds(mil) {
+                return Math.floor((mil / 1000) % 60);
+            };
+            
+            function getMinutes(mil) {
+                return Math.floor((mil / 1000 / 60) % 60);
+            };
+            
+            function getHours(mil) {
+                return Math.floor(mil / 1000 / 60 / 60) % 24;
+            };
+            
+            function getDays(mil) {
+                return Math.floor(mil / 1000 / 60 / 60 / 24);
+            };
+            
+            function isHalfDay() {
+                end = (new Date('June 18, 2021 10:52:00')).getTime();
+            };
+            
+            function isFullDay() {
+                end = (new Date('June 18, 2021 13:52:00')).getTime();
+            };
+            
+            function debug() {
+                end = getNow() + 3000;
+            };
+            
+            isHalfDay();
+            //debug();
+            
+            
+            let timer = document.getElementById('timer');
+            
+            let animCount = 0;
+            let beginFade = false;
+            let opacity = 1;
+            
+            setInterval(() => {
+                let done = '';
+                
+                if (end - getNow() > 0) {
+                    done = getDays(end - getNow()) + 'd ' + getHours(end - getNow()) + 'h ' + getMinutes(end - getNow()) + 'm ' + getSeconds(end - getNow()) + 's ' + getMilliseconds(end - getNow()) + 'ms';
+                } else {
+                    done = '0d 0h 0m 0s 000ms'
+                    if (!beginFade) {
+                        beginFade = true;
+                    };
+                };
+                
+                if (beginFade) {
+                    opacity -= .005;
+                    document.body.style.opacity = opacity * 100 + '%';
+                };
+                
+                timer.innerHTML = done;
+                document.body.style.backgroundPosition = '0% ' + animCount/-400 + '%'
+                animCount++;
+            },10);
+        </script>
+    </body>
+</html>
