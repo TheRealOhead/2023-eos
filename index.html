@@ -40,11 +40,31 @@
         
         <script>
             const urlParams = new URLSearchParams(window.location.search);
-            const seniorMode = typeof urlParams.get('senior') == 'string';
+
+            const modeProperties = {
+                'default':{
+                    end:'June 18, 2023 10:52:00',
+                    message:'Have a wonderful summer!'
+                },
+                'owen':{
+                    end:'April 19, 2023',
+                    message:'Now go home!'
+                },
+                'senior':{
+                    end:'June 2, 2023 10:52:00',
+                    message:'Happy graduation!'
+                }
+            };
 
 
-            var end = (new Date(seniorMode ? 'June 2, 2023 10:52:00' : 'June 18, 2023 10:52:00')).getTime();
-            
+
+            let mode = 'default';
+            if (typeof urlParams.get('senior') == 'string') mode = 'senior';
+            if (typeof urlParams.get('owen') == 'string') mode = 'owen';
+
+
+            //var end = (new Date(mode == 'senior' ? 'June 2, 2023 10:52:00' : 'June 18, 2023 10:52:00')).getTime();
+            let end = (new Date(modeProperties[mode].end)).getTime();
             
             
             // Dear fellow nerds: pls don't judge my code ;_;
@@ -88,7 +108,7 @@
                 end = getNow() + 3000;
             };
             
-            //isFullDay(); // Only uncomment this in the case that the last day is a full day!
+            //if(mode!='owen')isFullDay(); // Only uncomment this in the case that the last day is a full day!
             
             let timer = document.getElementById('timer');
             
@@ -102,7 +122,7 @@
                 if (time > 0) {
                     done = `${getDays(time)}d ${getHours(time)}h ${getMinutes(time)}m ${getSeconds(time)}s ${getMilliseconds(time)}ms`;
                 } else {
-                    done = seniorMode ? 'Happy graduation!' : 'Have a nice summer!';
+                    done = modeProperties[mode].message;
                     opacity -= .001;
                     document.body.style.opacity = opacity * 100 + '%';
                 };
