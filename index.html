@@ -6,24 +6,15 @@
         <title>Summer Countdown</title>
         <style>
             
-            @font-face {
-                font-family: november;
-                src: url(november.ttf);
-            }
-            @font-face {
-                font-family: appleII;
-                src: url(appleII.ttf);
-            }
-            
             body {
                 background-color:#010;
-                background-image:url(https://1.bp.blogspot.com/-I3wQ_1TKxrA/V96W-RFtaKI/AAAAAAAANTM/o7YOA6750pQ1hEcjOL0nH2hvuHRTFDcvgCLcB/s1600/Scanlines.png);
+                background-image:url(./scanlines.png);
                 background-repeat:repeat;
                 background-size:400%;
                 
                 color:#0f0;
                 
-                font-family: november, appleII, monospace;
+                font-family: monospace;
                 font-size:100px;
                 text-align:center;
             }
@@ -48,7 +39,11 @@
         
         
         <script>
-            var end = 0;
+            const urlParams = new URLSearchParams(window.location.search);
+            const seniorMode = typeof urlParams.get('senior') == 'string';
+
+
+            var end = (new Date(seniorMode ? 'June 2, 2023 10:52:00' : 'June 18, 2023 10:52:00')).getTime();
             
             
             
@@ -61,13 +56,7 @@
                 let value = Math.floor((mil % 1000) * 1000) / 1000;
                 let done = value.toString();
                 
-                if (done.length == 2) {
-                    done = '0' + done;
-                };
-                
-                if (done.length == 1) {
-                    done = '00' + done;
-                };
+                done = done.padStart(3,'0');
                 
                 // Set last digit to something random to make it look nicer
                 done = done.substr(0,done.length - 1) + Math.floor(Math.random() * 10);
@@ -76,36 +65,30 @@
             };
             
             function getSeconds(mil) {
-                return Math.floor((mil / 1000) % 60);
+                return Math.floor((mil / 1000) % 60).toString().padStart(2,'0');
             };
             
             function getMinutes(mil) {
-                return Math.floor((mil / 1000 / 60) % 60);
+                return Math.floor((mil / 1000 / 60) % 60).toString().padStart(2,'0');
             };
             
             function getHours(mil) {
-                return Math.floor(mil / 1000 / 60 / 60) % 24;
+                return (Math.floor(mil / 1000 / 60 / 60) % 24).toString().padStart(2,'0');
             };
             
             function getDays(mil) {
                 return Math.floor(mil / 1000 / 60 / 60 / 24);
             };
             
-            function isHalfDay() {
-                end = (new Date('June 18, 2023 10:52:00')).getTime();
-            };
-            
             function isFullDay() {
-                end = (new Date('June 18, 2023 13:52:00')).getTime();
+                end += 1000 * 60 * 3;
             };
             
             function debug() {
                 end = getNow() + 3000;
             };
             
-            isHalfDay();
-            //debug();
-            
+            //isFullDay(); // Only uncomment this in the case that the last day is a full day!
             
             let timer = document.getElementById('timer');
             
@@ -115,22 +98,17 @@
             
             setInterval(() => {
                 let done = '';
-                
-                if (end - getNow() > 0) {
-                    done = getDays(end - getNow()) + 'd ' + getHours(end - getNow()) + 'h ' + getMinutes(end - getNow()) + 'm ' + getSeconds(end - getNow()) + 's ' + getMilliseconds(end - getNow()) + 'ms';
+                let time = end - getNow();
+                if (time > 0) {
+                    done = `${getDays(time)}d ${getHours(time)}h ${getMinutes(time)}m ${getSeconds(time)}s ${getMilliseconds(time)}ms`;
                 } else {
-                    done = '0d 0h 0m 0s 000ms'
-                    if (!beginFade) {
-                        beginFade = true;
-                    };
-                };
-                
-                if (beginFade) {
-                    opacity -= .005;
+                    done = seniorMode ? 'Happy graduation!' : 'Have a nice summer!';
+                    opacity -= .001;
                     document.body.style.opacity = opacity * 100 + '%';
                 };
-                
                 timer.innerHTML = done;
+
+
                 document.body.style.backgroundPosition = '0% ' + animCount/-400 + '%'
                 animCount++;
             },10);
