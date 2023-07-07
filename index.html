@@ -43,16 +43,20 @@
 
             const modeProperties = {
                 'default':{
-                    end:'June 18, 2023 10:52:00',
+                    end:'June 18, 2024 10:52:00',
                     message:'Have a wonderful summer!'
                 },
                 'owen':{
-                    end:'April 19, 2023',
+                    end:'April 19, 2024',
                     message:'Now go home!'
                 },
                 'senior':{
-                    end:'June 2, 2023 10:52:00',
+                    end:'June 2, 2024 10:52:00',
                     message:'Happy graduation!'
+                },
+                'nyctrip':{
+                    end:'July 25, 2023 12:00:00',
+                    message:'Now go have fun!'
                 }
             };
 
@@ -61,6 +65,7 @@
             let mode = 'default';
             if (typeof urlParams.get('senior') == 'string') mode = 'senior';
             if (typeof urlParams.get('owen') == 'string') mode = 'owen';
+            if (typeof urlParams.get('nyctrip') == 'string') mode = 'nyctrip';
 
 
             //var end = (new Date(mode == 'senior' ? 'June 2, 2023 10:52:00' : 'June 18, 2023 10:52:00')).getTime();
